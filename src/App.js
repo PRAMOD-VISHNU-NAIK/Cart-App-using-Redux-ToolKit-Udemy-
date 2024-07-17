@@ -3,8 +3,9 @@ import Cart from "./components/Cart/Cart";
 import Layout from "./components/Layout/Layout";
 import Products from "./components/Shop/Products";
 import { useEffect } from "react";
-import { uiAction } from "./store/ui-slice";
 import Notification from "./components/UI/Notification";
+import { sendCartData } from "./store/cart-slice";
+import {fetchCartData} from "./store/cart-slice"
 
 let isInitial = true;
 
@@ -17,36 +18,12 @@ function App() {
 
   const dispatch = useDispatch();
 
+
   useEffect(() => {
-    
-    const sendCartData = async () => {
-      dispatch(
-        uiAction.showNotification({
-          status: "Pendign",
-          title: "Sending....",
-          message: "Sending Cart Data",
-        })
-      );
-      const response = await fetch(
-        "https://react-firebase-916ef-default-rtdb.firebaseio.com/cart.json",
-        {
-          method: "PUT",
-          body: JSON.stringify(cart),
-        }
-      );
+    dispatch(fetchCartData());
+  }, [dispatch])
 
-      if (!response.ok) {
-        throw new Error("Sending Cart Data Failed!!");
-      }
-
-      dispatch(
-        uiAction.showNotification({
-          status: "success",
-          title: "Success....",
-          message: "Sent Cart Data Successfully!",
-        })
-      );
-    };
+  useEffect(() => {
 
     // In case it is a initial render then I dont have anything to send to the backend so do not execute sendCartData() function.
     if (isInitial) {
@@ -54,15 +31,10 @@ function App() {
       return;
     }
 
-    sendCartData().catch((error) => {
-      dispatch(
-        uiAction.showNotification({
-          status: "error",
-          title: "Error....",
-          message: "Sending Cart Data Failed!!",
-        })
-      );
-    });
+    if(cart.changed){
+      dispatch(sendCartData(cart));
+    }
+    
   }, [cart, dispatch]); // Here dispatch is added for simplicity and to avoid squidly line, so it doesn't make any difference.
 
   return (
