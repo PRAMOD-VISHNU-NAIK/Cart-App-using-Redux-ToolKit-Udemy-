@@ -1,0 +1,11 @@
+{
+  "id": "react_ts_webapp",
+  "label": "React + TypeScript WebApp",
+  "version": "1.0.0",
+  "description": "A plugin containing a React + TypeScript frontend webapp.",
+  "icon": "icon-puzzle-piece",
+  "license": "MIT",
+  "author": "Your Name or Company",
+  "categories": ["Web App"],
+  "plugin_type": "standard"
+}
